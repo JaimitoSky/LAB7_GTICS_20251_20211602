@@ -1,10 +1,13 @@
+DROP DATABASE IF EXISTS lab7_db;
+
+
 CREATE DATABASE IF NOT EXISTS lab7_db
     DEFAULT CHARACTER SET utf8mb4
     DEFAULT COLLATE utf8mb4_general_ci;
 
 USE lab7_db;
 
---Tabla estudiante
+-- Tabla estudiante
 CREATE TABLE IF NOT EXISTS estudiante (
                                           id INT AUTO_INCREMENT PRIMARY KEY,
                                           nombres VARCHAR(100) NOT NULL,
@@ -24,3 +27,4 @@ CREATE TABLE IF NOT EXISTS estudiante (
     ultima_actualizacion DATETIME,
     estado BOOLEAN
     );
+
