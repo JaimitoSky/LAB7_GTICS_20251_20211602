@@ -91,4 +91,43 @@ public class EstudianteRestController {
         estudianteRepo.save(estudiante);
         return ResponseEntity.status(HttpStatus.CREATED).body("Estudiante registrado correctamente");
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody Map<String, Object> campos) {
+        Optional<Estudiante> optional = estudianteRepo.findById(id);
+        if (optional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("mensaje", "Estudiante no encontrado"));
+        }
+
+        Estudiante estudiante = optional.get();
+
+        if (campos.containsKey("telefono")) {
+            String telefono = campos.get("telefono").toString();
+            if (!telefono.matches("^9\\d{8}$")) {
+                return ResponseEntity.badRequest().body(Map.of("mensaje", "Teléfono inválido"));
+            }
+            estudiante.setTelefono(telefono);
+        }
+
+        // Puedes repetir esto para más campos permitidos
+
+        estudiante.setUltimaActualizacion(LocalDateTime.now());
+        estudianteRepo.save(estudiante);
+        return ResponseEntity.ok(Map.of("mensaje", "Estudiante actualizado correctamente"));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarLogicamente(@PathVariable Integer id) {
+        Optional<Estudiante> optional = estudianteRepo.findById(id);
+        if (optional.isPresent()) {
+            Estudiante e = optional.get();
+            e.setEstado(false);
+            estudianteRepo.save(e);
+            return ResponseEntity.ok(Map.of("mensaje", "Estudiante desactivado correctamente"));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("mensaje", "Estudiante no encontrado"));
+        }
+    }
+
+
 }
